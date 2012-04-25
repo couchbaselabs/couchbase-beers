@@ -1,0 +1,12 @@
+<h1>Beers</h1>
+{{#beers_by_brewery}}
+<h4><a href="{{brewery_url}}">{{brewery}}</a> - {{beer_count}}</h4>
+<ul>
+{{#beers}}
+  <li><a href="{{beer_url}}">{{beer}}</a></li>
+{{/beers}}
+{{^beers}}
+  <li>Sorry, no beers :(</li>
+{{/beers}}
+</ul>
+{{/beers_by_brewery}}

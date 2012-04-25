@@ -1,0 +1,24 @@
+<div class="vcard" data-last-updated="{{updated}}">
+  <h1 class="org">{{name}}</h1>
+  {{#website}}<a class="url" href="{{website}}">website</a>{{/website}}
+  <div class="adr">
+    {{#address}}
+    <div class="street-address">{{.}}</div>
+    {{/address}}
+    <div>
+      <span class="locality">{{city}}</span>
+      <span class="region">{{state}}</span>
+      <span class="postal-code">{{code}}</span>
+    </div>
+    <div class="country-name">{{country}}</div>
+    {{#geo}}
+    <div class="geo" data-accuracy="{{accuracy}}">
+      <span class="latitude">{{latitude}}</span>,
+      <span class="longitude">{{longitude}}</span>
+    </div>
+    {{/geo}}
+  </div>
+  <div class="tel"><a href="tel:{{phone}}">{{phone}}</a></div>
+  <div class="note">{{description}}</div>
+</div>
+<a href="../beers/?by={{name}}">Beers List</a>
