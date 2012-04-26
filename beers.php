@@ -35,10 +35,12 @@ $app->get('/beers/', function() use ($app, $cb, $cbv) {
         $beers_by_brewery[$i]['beer_count'] = $beer_count;
       }
     }
-    $app->render('beers.mustache', array('beers_by_brewery'=>$beers_by_brewery));
+    $app->view()->appendData(array('beers_by_brewery'=>$beers_by_brewery));
+    $content = $app->view()->render('beers.mustache');
   } else {
-    echo $beers['reason'];
+    $content = $beers['reason'] || 'error...sorry';
   }
+  $app->render('layout.mustache', compact('content'));
 });
 
 $app->get('/beers/:id', function($id) use ($app, $cb, $cbv) {
@@ -50,7 +52,9 @@ $app->get('/beers/:id', function($id) use ($app, $cb, $cbv) {
   if (isset($beer['brewery'])) {
     $beer['brewery_url'] = breweryUrl($beer['brewery']);
   }
-  $app->render('beer.mustache', $beer);
+  $app->view()->appendData($beer);
+  $content = $app->view()->render('beer.mustache');
+  $app->render('layout.mustache', compact('content'));
 });
 
 //POST route

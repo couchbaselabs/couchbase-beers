@@ -8,6 +8,12 @@ require 'vendors/couchsimple.php';
 // set up the app
 MustacheView::$mustacheDirectory = 'vendors';
 $app = new Slim(array('view' => 'MustacheView'));
+$env = $app->environment();
+$app->view()->appendData(array(
+  'app_title' => 'Couchbase Beers',
+  'base_url' => $env['SCRIPT_NAME'],
+  'current_url' => $env['PATH_INFO']
+));
 
 // Setup Couchbase connected objects
 try {
@@ -21,9 +27,9 @@ $cbv = new CouchSimple(array('host'=>'127.0.0.1', 'port'=>9500));
 // openbeers application goodness
 
 // GET route
-$app->get('/', function () {
-    echo '<a href="beers">beers!</a><br />';
-    echo '<a href="breweries">breweries!</a>';
+$app->get('/', function () use ($app) {
+  $content = $app->view()->render('index.mustache');
+  $app->render('layout.mustache', compact('content'));
 });
 // beer routes
 require_once 'beers.php';

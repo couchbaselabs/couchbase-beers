@@ -1,7 +1,7 @@
-<h1>Beers</h1>
 {{#beers_by_brewery}}
-<h4><a href="{{brewery_url}}">{{brewery}}</a> - {{beer_count}}</h4>
-<ul>
+<h1><a href="{{brewery_url}}">{{brewery}}</a> - {{beer_count}} beers</h1>
+<hr>
+<ul class="nav nav-list">
 {{#beers}}
   <li><a href="{{beer_url}}">{{beer}}</a></li>
 {{/beers}}

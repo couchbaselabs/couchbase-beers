@@ -16,12 +16,12 @@ $app->get('/breweries/', function() use ($app, $cb, $cbv) {
                             'count' => $entry['value'] - 1,
                             'beers_url' => '../beers/?by=' . $entry['key'][0]);
     }
-    //print_r($beer_counts);
-    $app->render('breweries.mustache', array('breweries'=> $beer_counts));
-    //print_r(var_dump($cb->getMulti($ids)));
+    $app->view()->appendData(array('breweries'=> $beer_counts));
+    $content = $app->view()->render('breweries.mustache');
   } else {
-    echo $breweries['reason'];
+    $content = $breweries['reason'];
   }
+  $app->render('layout.mustache', compact('content'));
   exit;
   $ids = array();
   if (!isset($breweries['error']) && $breweries['total_rows'] > 0) {
@@ -37,16 +37,23 @@ $app->get('/breweries/', function() use ($app, $cb, $cbv) {
 
 $app->get('/breweries/:id', function($id) use ($app, $cb, $cbv) {
   $brewery = json_decode($cbv->send('GET', '/beer-sample/brewery_' . str_replace(' ', '_', urldecode($id))), true);
-  if (isset($brewery['geo']['loc'])
-      && is_array($brewery['geo']['loc'])
-      && count($brewery['geo']['loc']) > 0) {
-    $brewery['geo']['latitude'] = $brewery['geo']['loc'][0];
-    $brewery['geo']['longitude'] = $brewery['geo']['loc'][1];
+  if (isset($brewery['error'])) {
+    $content = '<h4>Error: ' . $brewery['error'] . '</h4><pre>' . $brewery['reason'] . '</pre>';
   } else {
-    unset($brewery['geo']);
+    if (isset($brewery['geo']['loc'])
+        && is_array($brewery['geo']['loc'])
+        && count($brewery['geo']['loc']) > 0) {
+      $brewery['geo']['latitude'] = $brewery['geo']['loc'][0];
+      $brewery['geo']['longitude'] = $brewery['geo']['loc'][1];
+    } else {
+      unset($brewery['geo']);
+    }
+
+    $app->view()->appendData($brewery);
+    $content = $app->view()->render('brewery.mustache');
   }
-  $app->render('brewery.mustache', $brewery);
-})->name('brewery');
+  $app->render('layout.mustache', compact('content'));
+});
 
 //POST route
 $app->post('/breweries', function () {
