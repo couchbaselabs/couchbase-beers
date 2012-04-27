@@ -14,6 +14,7 @@ $app->get('/breweries/', function() use ($app, $cb, $cbv) {
                             // the brewery doc itself adds to the count of docs
                             // so we're removing it here.
                             'count' => $entry['value'] - 1,
+                            'badge_type' => ($entry['value'] - 1 == 0 ? 'badge-warning' : 'badge-info'),
                             'beers_url' => '../beers/?by=' . $entry['key'][0]);
     }
     $app->view()->appendData(array('breweries'=> $beer_counts));
