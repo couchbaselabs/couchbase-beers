@@ -22,17 +22,6 @@ $app->get('/breweries/', function() use ($app, $cb, $cbv) {
     $content = $breweries['reason'];
   }
   $app->render('layout.mustache', compact('content'));
-  exit;
-  $ids = array();
-  if (!isset($breweries['error']) && $breweries['total_rows'] > 0) {
-    foreach ($breweries['rows'] as $beer) {
-      array_push($ids, $beer['id']);
-    }
-    print_r(var_dump($cb->getMulti($ids)));
-    //echo json_encode($ids);
-  } else {
-    echo $breweries['reason'];
-  }
 });
 
 $app->get('/breweries/:id', function($id) use ($app, $cb, $cbv) {
