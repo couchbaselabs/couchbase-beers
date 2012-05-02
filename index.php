@@ -3,7 +3,6 @@
 // require stuffs
 require 'vendors/Slim/Slim/Slim.php';
 require 'vendors/Slim-Extras/Views/MustacheView.php';
-require 'vendors/couchsimple.php';
 
 // set up the app
 MustacheView::$mustacheDirectory = 'vendors';
@@ -17,12 +16,10 @@ $app->view()->appendData(array(
 
 // Setup Couchbase connected objects
 try {
-  $cb = new Couchbase("127.0.0.1:9000", "Administrator", "asdasd", "beer-sample");
+  $cb = new Couchbase("127.0.0.1:8091", "Administrator", "asdasd", "beer-sample");
 } catch (ErrorException $e) {
   die($e->getMessage());
 }
-
-$cbv = new CouchSimple(array('host'=>'127.0.0.1', 'port'=>9500));
 
 // openbeers application goodness
 
