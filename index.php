@@ -9,7 +9,7 @@ MustacheView::$mustacheDirectory = 'vendors';
 $app = new Slim(array('view' => 'MustacheView'));
 $env = $app->environment();
 $app->view()->appendData(array(
-  'app_title' => 'Couchbase Beers',
+  'app_title' => 'Beernique',
   'base_url' => $env['SCRIPT_NAME'],
   'current_url' => $env['PATH_INFO']
 ));

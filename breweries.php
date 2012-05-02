@@ -8,12 +8,8 @@ $app->get('/breweries/', function() use ($app, $cb) {
 });
 
 $app->get('/breweries/:id', function($id) use ($app, $cb) {
-  $brewery = $cb->get('brewery_' . str_replace(' ', '_', urldecode($id)));
-  print_r($brewery);
-  exit;
-  if (isset($brewery['error'])) {
-    $content = '<h4>Error: ' . $brewery['error'] . '</h4><pre>' . $brewery['reason'] . '</pre>';
-  } else {
+  $brewery = json_decode($cb->get('brewery_' . str_replace(' ', '_', urldecode($id))), true);
+  if ($brewery !== null) {
     if (isset($brewery['geo']['loc'])
         && is_array($brewery['geo']['loc'])
         && count($brewery['geo']['loc']) > 0) {
@@ -25,6 +21,8 @@ $app->get('/breweries/:id', function($id) use ($app, $cb) {
 
     $app->view()->appendData($brewery);
     $content = $app->view()->render('brewery.mustache');
+    $app->render('layout.mustache', compact('content'));
+  } else {
+    $app->notFound();
   }
-  $app->render('layout.mustache', compact('content'));
 });
