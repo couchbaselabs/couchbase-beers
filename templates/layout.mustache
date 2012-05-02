@@ -34,19 +34,12 @@
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
           <a class="brand" href="{{base_url}}/">{{app_title}}</a>
-          <div class="nav-collapse">
-            <ul class="nav">
-              <li><a href="{{base_url}}/">Home</a></li>
-              <li><a href="{{base_url}}/beers">Beers</a></li>
-              <li><a href="{{base_url}}/breweries">Breweries</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
+          {{^on_index}}
+          <form action="beers/" method="GET" class="navbar-search pull-left">
+            <input type="search" placeholder="Whatcha drinkin'?" class="search-query span2" name="id">
+          </form>
+          {{/on_index}}
         </div>
       </div>
     </div>

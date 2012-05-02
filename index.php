@@ -26,7 +26,7 @@ try {
 // GET route
 $app->get('/', function () use ($app) {
   $content = $app->view()->render('index.mustache');
-  $app->render('layout.mustache', compact('content'));
+  $app->render('layout.mustache', compact('content') + array('on_index' => true));
 });
 // beer routes
 require_once 'beers.php';
