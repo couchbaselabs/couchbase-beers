@@ -36,7 +36,7 @@
         <div class="container">
           <a class="brand" href="{{base_url}}/">{{app_title}}</a>
           {{^on_index}}
-          <form action="beers/" method="GET" class="navbar-search pull-left">
+          <form action="{{base_url}}/beers/" method="GET" class="navbar-search pull-left">
             <input type="search" placeholder="Whatcha drinkin'?" class="search-query span2" name="id">
           </form>
           {{/on_index}}
