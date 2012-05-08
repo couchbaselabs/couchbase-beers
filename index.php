@@ -27,9 +27,17 @@ try {
 // openbeers application goodness
 
 // GET route
-$app->get('/', function () use ($app) {
+$app->get('/', function () use ($app, $cb) {
+  if (isset($_SESSION['email']) && $_SESSION['email'] !== ''
+      && ($users_beers = $cb->get(sha1($_SESSION['email']))) !== null) {
+    $users_beers = explode('|', $users_beers);
+    $beerz = $cb->getMulti($users_beers);
+    foreach ($beerz as $k => $beer) {
+      $beers[] = json_decode($beer, true);
+    }
+  }
   $content = $app->view()->render('index.mustache');
-  $app->render('layout.mustache', compact('content') + array('on_index' => true));
+  $app->render('layout.mustache', compact('content', 'beers') + array('on_index' => true));
 });
 
 // GET BrowserID verification
