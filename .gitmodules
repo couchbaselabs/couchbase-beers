@@ -4,3 +4,6 @@
 [submodule "vendors/Slim"]
 	path = vendors/Slim
 	url = https://github.com/codeguy/Slim.git
+[submodule "vendors/Resty"]
+	path = vendors/Resty
+	url = https://github.com/fictivekin/Resty.php.git
