@@ -24,7 +24,6 @@ try {
   die($e->getMessage());
 }
 
-// openbeers application goodness
 
 // GET route
 $app->get('/', function () use ($app, $cb) {
@@ -32,8 +31,16 @@ $app->get('/', function () use ($app, $cb) {
       && ($users_beers = $cb->get(sha1($_SESSION['email']))) !== null) {
     $users_beers = explode('|', $users_beers);
     $beerz = $cb->getMulti($users_beers);
+    $breweries = array();
     foreach ($beerz as $k => $beer) {
-      $beers[] = json_decode($beer, true);
+      $beer = json_decode($beer, true);
+      $beer['brewery_url'] = 'breweries/' . str_replace(' ', '_', $beer['brewery']);
+      $beers[] = $beer;
+      if (!isset($breweries[$beer['brewery']])) {
+        $breweries[$beer['brewery']] = 1;
+      } else {
+        $breweries[$beer['brewery']]++;
+      }
     }
   }
   $content = $app->view()->render('index.mustache');
