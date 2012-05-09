@@ -74,7 +74,7 @@ $app->post('/browserid/logout', function() use ($app) {
 });
 
 $app->get('/browserid/whoami', function() use ($app) {
-  header('Content-Type: application/json');
+  $app->response()->header('Content-Type', 'application/json');
   if (isset($_SESSION['email'])) {
     echo json_encode($_SESSION['email']);
   }

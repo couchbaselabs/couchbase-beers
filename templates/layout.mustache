@@ -13,7 +13,6 @@
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
       }
-      #logout {display:none}
     </style>
     <link href="{{base_url}}/assets/css/bootstrap-responsive.css" rel="stylesheet">
 
@@ -43,10 +42,10 @@
           {{/on_index}}
           <ul class="nav pull-right">
             <li>
-              <a href="#" id="browserid" title="Sign-in with BrowserID">
+              <a href="#" id="login" title="Sign-in with BrowserID">
                 <img src="{{base_url}}/assets/ico/sign_in_blue.png" alt="Sign in">
               </a>
-              <a href="#" id="logout">
+              <a href="#" id="logout" style="display:none">
                 Hi yeah, <span id="whoami">??</span>
                 Wanna logout?
               </a>
@@ -86,11 +85,11 @@
     <script>
     function loggedIn(res) {
       $('#whoami').html(res);
-      $('#browserid, #logout').toggle();
+      $('#login, #logout').toggle();
     }
 
     function loggedOut() {
-      $('#browserid, #logout').toggle();
+      $('#login, #logout').toggle();
     }
 
     function gotVerifiedEmail(assertion) {
@@ -127,7 +126,7 @@
         }
       }, 'json');
 
-      $('#browserid').on('click', function() {
+      $('#login').on('click', function() {
         navigator.id.get(gotVerifiedEmail, {allowPersistent: true});
         return false;
       });
