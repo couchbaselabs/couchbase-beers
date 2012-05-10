@@ -44,7 +44,12 @@ $app->get('/', function () use ($app, $cb) {
     }
   }
   $content = $app->view()->render('index.mustache');
-  $app->render('layout.mustache', compact('content', 'beers') + array('on_index' => true));
+  $app->render('layout.mustache',
+                compact('content', 'beers')
+                  + array('on_index' => true,
+                          'has_beers' => (count($beers) > 0)
+                    )
+              );
 });
 
 // GET BrowserID verification

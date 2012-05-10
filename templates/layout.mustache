@@ -57,11 +57,38 @@
 
     <div class="container">
       {{{content}}}
-      <ul>
-      {{#beers}}
-        <li><strong>{{name}}</strong> by <a href="{{brewery_url}}">{{brewery}}</a></li>
-      {{/beers}}
-      </ul>
+      {{#on_index}}
+      {{#has_beers}}
+      <div class="row">
+        <div class="span4">
+          <h3>You most recently drank...</h3>
+          <ul>
+          {{#beers}}
+            <li>{{name}}</li>
+          {{/beers}}
+          </ul>
+        </div>
+
+        <div class="span4">
+          <h3>You mostly drink...</h3>
+          <ul>
+          {{#beers}}
+            <li>{{name}}</li>
+          {{/beers}}
+          </ul>
+        </div>
+
+        <div class="span4">
+          <h3>You seem to have a thing for...</h3>
+          <ul>
+          {{#beers}}
+            <li>{{name}}</li>
+          {{/beers}}
+          </ul>
+        </div>
+      </div>
+      {{/has_beers}}
+      {{/on_index}}
     </div> <!-- /container -->
 
     <!-- Le javascript
