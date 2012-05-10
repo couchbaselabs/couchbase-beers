@@ -22,7 +22,6 @@ $app->get('/beers/:id', function($id) use ($app, $cb) {
     $beer_id = 'beer_' . str_replace(' ', '_', urldecode($id));
     $beer = json_decode($cb->get($beer_id), true);
     if ($beer !== null) {
-      $cb->append(sha1($_SESSION['email']), $beer_id . '|');
       if (isset($beer['brewery'])) {
         $beer['brewery_url'] = breweryUrl($beer['brewery']);
       }
@@ -35,9 +34,20 @@ $app->get('/beers/:id', function($id) use ($app, $cb) {
   }
 });
 
-//POST route for "drinking"
-$app->post('/beers/:id', function () {
-    echo 'This is a POST route';
-    // TODO: require {"drank_at": $timestamp}
-    // TODO: record entry in the user's doc (with timestamp?)
+// POST route for "drinking"
+$app->post('/beers/', function () use ($app, $cb) {
+  // TODO: add better login required handler thing
+  if (!isset($_SESSION['email'])) {
+    $app->halt(401);
+  }
+  $id = $app->request()->params('id');
+  if ($id === null) {
+    // TODO: switch to $app->halt();
+    $app->response()->status(501);
+  }
+  // TODO: handler errors
+
+  $beer_id = 'beer_' . str_replace(' ', '_', urldecode($id));
+  $cb->append(sha1($_SESSION['email']), $beer_id . '|');
+  $app->redirect('../beers/' . $id);
 });
