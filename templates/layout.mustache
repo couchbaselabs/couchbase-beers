@@ -61,10 +61,10 @@
       {{#has_beers}}
       <div class="row">
         <div class="span4">
-          <h3>You most recently drank...</h3>
+          <h3>You've been drinking...</h3>
           <ul>
           {{#beers}}
-            <li><a href="{{beer_url}}">{{name}}</a></li>
+            <li><a href="{{beer_url}}">{{name}}</a> <span class="badge">{{drank_times}}</span></li>
           {{/beers}}
           </ul>
         </div>

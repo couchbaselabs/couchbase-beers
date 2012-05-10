@@ -32,11 +32,13 @@ $app->get('/', function () use ($app, $cb) {
       && ($users_beers = $cb->get(sha1($_SESSION['email']))) !== null) {
     $users_beers = explode('|', $users_beers);
     $beerz = $cb->getMulti($users_beers);
+    $users_beers = array_count_values($users_beers);
     $breweries = array();
     foreach ($beerz as $k => $beer) {
       $beer = json_decode($beer, true);
       $beer['beer_url'] = 'beers/' . str_replace(' ', '_', $beer['name']);
       $beer['brewery_url'] = 'breweries/' . str_replace(' ', '_', $beer['brewery']);
+      $beer['drank_times'] = $users_beers[$k];
       $beers[] = $beer;
       if (!isset($breweries[$beer['brewery']])) {
         $breweries[$beer['brewery']] = 1;
