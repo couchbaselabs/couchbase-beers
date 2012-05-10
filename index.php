@@ -35,6 +35,7 @@ $app->get('/', function () use ($app, $cb) {
     $breweries = array();
     foreach ($beerz as $k => $beer) {
       $beer = json_decode($beer, true);
+      $beer['beer_url'] = 'beers/' . str_replace(' ', '_', $beer['name']);
       $beer['brewery_url'] = 'breweries/' . str_replace(' ', '_', $beer['brewery']);
       $beers[] = $beer;
       if (!isset($breweries[$beer['brewery']])) {
