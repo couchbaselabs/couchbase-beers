@@ -27,6 +27,7 @@ try {
 
 // GET route
 $app->get('/', function () use ($app, $cb) {
+  $beers = array();
   if (isset($_SESSION['email']) && $_SESSION['email'] !== ''
       && ($users_beers = $cb->get(sha1($_SESSION['email']))) !== null) {
     $users_beers = explode('|', $users_beers);
