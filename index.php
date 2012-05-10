@@ -82,7 +82,7 @@ $app->post('/browserid/login', function () use ($app, $cb) {
 });
 
 $app->post('/browserid/logout', function() use ($app) {
-  unset($_SESSION['email']);
+  $_SESSION['email'] = null;
 });
 
 $app->get('/browserid/whoami', function() use ($app) {

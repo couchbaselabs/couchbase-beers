@@ -112,11 +112,13 @@
     <script>
     function loggedIn(res) {
       $('#whoami').html(res);
-      $('#login, #logout').toggle();
+      $('#login').hide();
+      $('#logout').show();
     }
 
     function loggedOut() {
-      $('#login, #logout').toggle();
+      $('#login').show();
+      $('#logout').hide();
     }
 
     function gotVerifiedEmail(assertion) {
@@ -131,7 +133,7 @@
             else loggedIn(res);
           },
           error: function(res, status, xhr) {
-            alert("login failure" + res);
+            console.log("login failure", res);
           }
         });
       } else {
@@ -163,6 +165,7 @@
           type: 'POST',
           url: '{{base_url}}/browserid/logout',
           success: function(res, status, xhr) {
+            navigator.id.logout();
             loggedOut();
           }
         });
