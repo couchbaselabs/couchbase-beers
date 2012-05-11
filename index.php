@@ -19,7 +19,7 @@ $app->add(new Slim_Middleware_SessionCookie());
 
 // Setup Couchbase connected objects
 try {
-  $cb = new Couchbase("127.0.0.1:8091", "Administrator", "asdasd", "beer-sample");
+  $cb = new Couchbase("127.0.0.1:8091", "", "", "beer-sample");
 } catch (ErrorException $e) {
   die($e->getMessage());
 }
