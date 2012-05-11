@@ -127,9 +127,10 @@
         $.ajax({
           type: 'POST',
           url: '{{base_url}}/browserid/login',
+          dataType: 'json',
           data: { assertion: assertion },
           success: function(res, status, xhr) {
-            if (res === null) loggedOut();
+            if (res === null || res.status === false) loggedOut();
             else loggedIn(res);
           },
           error: function(res, status, xhr) {
