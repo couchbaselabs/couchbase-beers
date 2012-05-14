@@ -20,12 +20,12 @@ $app->get('/beers/:id', function($id) use ($app, $cb) {
     $app->response()->status(401);
   } else {
     $beer_id = 'beer_' . str_replace(' ', '_', urldecode($id));
-    $beer = json_decode($cb->get($beer_id), true);
+    $beer = json_decode($cb->get($beer_id));
     if ($beer !== null) {
-      if (isset($beer['brewery'])) {
-        $beer['brewery_url'] = breweryUrl($beer['brewery']);
+      if (isset($beer->brewery)) {
+        $beer->brewery_url = breweryUrl($beer->brewery);
       }
-      $app->view()->appendData($beer);
+      $app->view()->appendData((array)$beer);
       $content = $app->view()->render('beer.mustache');
       $app->render('layout.mustache', compact('content'));
     } else {

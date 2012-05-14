@@ -8,18 +8,19 @@ $app->get('/breweries/', function() use ($app, $cb) {
 });
 
 $app->get('/breweries/:id', function($id) use ($app, $cb) {
-  $brewery = json_decode($cb->get('brewery_' . str_replace(' ', '_', urldecode($id))), true);
+  $brewery_id = 'brewery_' . str_replace(' ', '_', urldecode($id));
+  $brewery = json_decode($cb->get($brewery_id));
   if ($brewery !== null) {
-    if (isset($brewery['geo']['loc'])
-        && is_array($brewery['geo']['loc'])
-        && count($brewery['geo']['loc']) > 0) {
-      $brewery['geo']['latitude'] = $brewery['geo']['loc'][0];
-      $brewery['geo']['longitude'] = $brewery['geo']['loc'][1];
+    if (isset($brewery->geo) && isset($brewery->geo->loc)
+        && is_array($brewery->geo->loc)
+        && count($brewery->geo->loc) > 0) {
+      $brewery->geo->latitude = $brewery->geo->loc[0];
+      $brewery->geo->longitude = $brewery->geo->loc[1];
     } else {
-      unset($brewery['geo']);
+      unset($brewery->geo);
     }
 
-    $app->view()->appendData($brewery);
+    $app->view()->appendData((array)$brewery);
     $content = $app->view()->render('brewery.mustache');
     $app->render('layout.mustache', compact('content'));
   } else {

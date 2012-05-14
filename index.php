@@ -27,33 +27,43 @@ try {
 
 // GET route
 $app->get('/', function () use ($app, $cb) {
-  $beers = array();
+  $on_index = true;
   if (isset($_SESSION['email']) && $_SESSION['email'] !== ''
       && ($users_beers = $cb->get(sha1($_SESSION['email']))) !== null) {
-    $users_beers = explode('|', $users_beers);
-    $beerz = $cb->getMulti($users_beers);
-    $users_beers = array_count_values($users_beers);
-    $breweries = array();
-    foreach ($beerz as $k => $beer) {
-      $beer = json_decode($beer, true);
-      $beer['beer_url'] = 'beers/' . str_replace(' ', '_', $beer['name']);
-      $beer['brewery_url'] = 'breweries/' . str_replace(' ', '_', $beer['brewery']);
-      $beer['drank_times'] = $users_beers[$k];
-      $beers[] = $beer;
-      if (!isset($breweries[$beer['brewery']])) {
-        $breweries[$beer['brewery']] = 1;
-      } else {
-        $breweries[$beer['brewery']]++;
+    $users_beers = array_filter(explode('|', $users_beers));
+    $users_beer_counts = array_count_values($users_beers);
+    if (count($users_beers) > 0) {
+      $breweries = array();
+      $unique_beers = array();
+      foreach ($users_beers as $beer_id) {
+        if (in_array($beer_id, $unique_beers)) {
+          continue;
+        }
+        $beer = json_decode($cb->get($beer_id));
+        $beer->beer_url = 'beers/' . str_replace(' ', '_', $beer->name);
+        $beer->brewery_url = 'breweries/' . str_replace(' ', '_', $beer->brewery);
+        $beer->drank_times = $users_beer_counts[$beer_id];
+        $beers[] = $beer;
+        $unique_beers[] = $beer_id;
+        if (!isset($breweries[$beer->brewery])) {
+          $breweries[$beer->brewery] = 1;
+        } else {
+          $breweries[$beer->brewery]++;
+        }
       }
     }
   }
   $content = $app->view()->render('index.mustache');
-  $app->render('layout.mustache',
-                compact('content', 'beers')
-                  + array('on_index' => true,
-                          'has_beers' => (count($beers) > 0)
+  if (isset($beers)) {
+    $app->render('layout.mustache',
+                compact('content', 'beers', 'on_index')
+                  + array('has_beers' => (count($beers) > 0),
+                          'mostly_drink' => str_replace('_', ' ', max_key($users_beers))
                     )
               );
+  } else {
+    $app->render('layout.mustache', compact('content', 'on_index'));
+  }
 });
 
 // GET BrowserID verification
