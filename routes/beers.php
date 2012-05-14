@@ -53,6 +53,9 @@ $app->post('/beers/', function () use ($app, $cb) {
   // TODO: handler errors
 
   $beer_id = 'beer_' . str_replace(' ', '_', urldecode($id));
+  if ($cb->get($beer_id) === null) {
+    $app->halt(404);
+  }
   $email = sha1($_SESSION['email']);
   if ($cb->get($email) !== null) {
     $cb->append($email, '|' . $beer_id);
