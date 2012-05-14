@@ -1,4 +1,9 @@
 <?php
+if (!defined('INSIDE_BEERNIQUE')) {
+  // redirect user to index.php through which all beer flows
+  header('Location: index.php');
+}
+
 function breweryUrl($name) {
   return '../breweries/' . str_replace(' ' , '_', $name);
 }

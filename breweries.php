@@ -1,4 +1,9 @@
 <?php
+if (!defined('INSIDE_BEERNIQUE')) {
+  // redirect user to index.php through which all beer flows
+  header('Location: index.php');
+}
+
 // GET /breweries
 $app->get('/breweries/', function() use ($app, $cb) {
   $app->response()->status(501);
