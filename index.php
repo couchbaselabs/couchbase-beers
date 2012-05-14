@@ -46,11 +46,19 @@ $app->get('/', function () use ($app, $cb) {
       $breweries = array();
       $unique_beers = array();
       foreach ($users_beers as $beer_id) {
-        if (in_array($beer_id, $unique_beers)) {
+        $beer = json_decode($cb->get($beer_id));
+        // if a non-existent beer was accidently added to the users doc, skip it
+        if ($beer === null) {
           continue;
         }
-        $beer = json_decode($cb->get($beer_id));
-        if ($beer === null) {
+        // add to the brewery counter for "mostly_by" list
+        if (!isset($breweries[$beer->brewery])) {
+          $breweries[$beer->brewery] = 1;
+        } else {
+          $breweries[$beer->brewery]++;
+        }
+        // if we already have the beer in the list, though, let's skip it
+        if (in_array($beer_id, $unique_beers)) {
           continue;
         }
         $beer->beer_url = 'beers/' . str_replace(' ', '_', $beer->name);
@@ -58,11 +66,6 @@ $app->get('/', function () use ($app, $cb) {
         $beer->drank_times = $users_beer_counts[$beer_id];
         $beers[] = $beer;
         $unique_beers[] = $beer_id;
-        if (!isset($breweries[$beer->brewery])) {
-          $breweries[$beer->brewery] = 1;
-        } else {
-          $breweries[$beer->brewery]++;
-        }
       }
     }
   }
@@ -71,7 +74,8 @@ $app->get('/', function () use ($app, $cb) {
     $app->render('layout.mustache',
                 compact('content', 'beers', 'on_index')
                   + array('has_beers' => (count($beers) > 0),
-                          'mostly_drink' => str_replace('_', ' ', str_replace('beer_', '', max_key($users_beer_counts)))
+                          'mostly_drink' => str_replace('_', ' ', str_replace('beer_', '', max_key($users_beer_counts))),
+                          'mostly_by' => max_key($breweries)
                     )
               );
   } else {
