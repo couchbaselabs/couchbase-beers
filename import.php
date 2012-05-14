@@ -15,7 +15,7 @@ function import($cb, $dir) {
     echo "adding $file\n";
     $json = json_decode(file_get_contents($dir . $file), true);
     unset($json["_id"]);
-    echo $cb->set(substr($file, 0, -5), $json);
+    echo $cb->set(substr($file, 0, -5), json_encode($json));
     echo "\n";
   }
 }
