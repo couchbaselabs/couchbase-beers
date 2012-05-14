@@ -1,6 +1,7 @@
 <?php
 
 // require stuffs
+require_once 'config.php';
 require 'vendors/Resty/Resty.php';
 require 'vendors/Slim/Slim/Slim.php';
 require 'vendors/Slim-Extras/Views/MustacheView.php';
@@ -28,7 +29,7 @@ function max_key($array) {
 
 // Setup Couchbase connected objects
 try {
-  $cb = new Couchbase("127.0.0.1:8091", "", "", "beer-sample");
+  $cb = new Couchbase(COUCHBASE_HOST.':'.COUCHBASE_PORT, COUCHBASE_USER, COUCHBASE_PASSWORD, COUCHBASE_BUCKET);
 } catch (ErrorException $e) {
   die($e->getMessage());
 }

@@ -1,8 +1,10 @@
 <?php
 
+require_once 'config.php';
+
 // Setup Couchbase connected objects
 try {
-  $cb = new Couchbase("127.0.0.1:8091", "", "", "beer-sample");
+  $cb = new Couchbase(COUCHBASE_HOST.':'.COUCHBASE_PORT, COUCHBASE_USER, COUCHBASE_PASSWORD, COUCHBASE_BUCKET);
 } catch (ErrorException $e) {
   die($e->getMessage());
 }
