@@ -19,6 +19,13 @@ $app->view()->appendData(array(
 
 $app->add(new Slim_Middleware_SessionCookie());
 
+// http://www.php.net/manual/en/function.max.php#97004
+function max_key($array) {
+  foreach ($array as $key => $val) {
+    if ($val == max($array)) return $key;
+  }
+}
+
 // Setup Couchbase connected objects
 try {
   $cb = new Couchbase("127.0.0.1:8091", "", "", "beer-sample");
@@ -60,7 +67,7 @@ $app->get('/', function () use ($app, $cb) {
     $app->render('layout.mustache',
                 compact('content', 'beers', 'on_index')
                   + array('has_beers' => (count($beers) > 0),
-                          'mostly_drink' => str_replace('_', ' ', max_key($users_beers))
+                          'mostly_drink' => str_replace('beer_', '', str_replace('_', ' ', max_key($users_beer_counts)))
                     )
               );
   } else {
