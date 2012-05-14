@@ -67,7 +67,7 @@ $app->get('/', function () use ($app, $cb) {
     $app->render('layout.mustache',
                 compact('content', 'beers', 'on_index')
                   + array('has_beers' => (count($beers) > 0),
-                          'mostly_drink' => str_replace('beer_', '', str_replace('_', ' ', max_key($users_beer_counts)))
+                          'mostly_drink' => str_replace('_', ' ', str_replace('beer_', '', max_key($users_beer_counts)))
                     )
               );
   } else {
