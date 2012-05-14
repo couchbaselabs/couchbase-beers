@@ -48,6 +48,11 @@ $app->post('/beers/', function () use ($app, $cb) {
   // TODO: handler errors
 
   $beer_id = 'beer_' . str_replace(' ', '_', urldecode($id));
-  $cb->append(sha1($_SESSION['email']), $beer_id . '|');
+  $email = sha1($_SESSION['email']);
+  if ($cb->get($email) !== null) {
+    $cb->append($email, '|' . $beer_id);
+  } else {
+    $cb->set($email, $beer_id);
+  }
   $app->redirect('../beers/' . $id);
 });
