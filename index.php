@@ -49,6 +49,9 @@ $app->get('/', function () use ($app, $cb) {
           continue;
         }
         $beer = json_decode($cb->get($beer_id));
+        if ($beer === null) {
+          continue;
+        }
         $beer->beer_url = 'beers/' . str_replace(' ', '_', $beer->name);
         $beer->brewery_url = 'breweries/' . str_replace(' ', '_', $beer->brewery);
         $beer->drank_times = $users_beer_counts[$beer_id];
