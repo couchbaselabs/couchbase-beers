@@ -13,7 +13,9 @@ function import($cb, $dir) {
   while (false !== ($file = $d->read())) {
     if (substr($file, -5) != '.json') continue;
     echo "adding $file\n";
-    echo $cb->set(substr($file, 0, -5), file_get_contents($dir . $file));
+    $json = json_decode(file_get_contents($dir . $file), true);
+    unset($json["_id"]);
+    echo $cb->set(substr($file, 0, -5), $json);
     echo "\n";
   }
 }
