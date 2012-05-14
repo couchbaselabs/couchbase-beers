@@ -13,7 +13,7 @@ $app = new Slim(array('view' => 'MustacheView'));
 $env = $app->environment();
 $app->view()->appendData(array(
   'app_title' => 'Beernique',
-  'base_url' => $env['SCRIPT_NAME'],
+  'base_url' => str_replace('/index.php', '', $env['SCRIPT_NAME']),
   'current_url' => $env['PATH_INFO']
 ));
 
@@ -109,8 +109,8 @@ $app->get('/browserid/whoami', function() use ($app) {
 });
 
 // beer routes
-require_once 'beers.php';
+require_once 'routes/beers.php';
 // brewery routes
-require_once 'breweries.php';
+require_once 'routes/breweries.php';
 // run, Slim, run
 $app->run();

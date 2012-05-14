@@ -1,7 +1,7 @@
 <?php
 if (!defined('INSIDE_BEERNIQUE')) {
   // redirect user to index.php through which all beer flows
-  header('Location: index.php');
+  header('Location: ../');
 }
 
 // GET /breweries
