@@ -22,7 +22,7 @@ $app->get('/beers/', function() use ($app, $cb) {
 
 $app->get('/beers/:id', function($id) use ($app, $cb) {
   if (!isset($_SESSION['email'])) {
-    $app->response()->status(401);
+    $app->halt(401);
   } else {
     $beer_id = 'beer_' . str_replace(' ', '_', urldecode($id));
     $beer = json_decode($cb->get($beer_id));
@@ -34,7 +34,10 @@ $app->get('/beers/:id', function($id) use ($app, $cb) {
       $content = $app->view()->render('beer.mustache');
       $app->render('layout.mustache', compact('content'));
     } else {
-      $app->notFound();
+      $app->render('layout.mustache',
+        array('content' => '<h1>404 - Beeer not found...how sad.'),
+        404);
+      exit;
     }
   }
 });
@@ -54,7 +57,10 @@ $app->post('/beers/', function () use ($app, $cb) {
 
   $beer_id = 'beer_' . str_replace(' ', '_', urldecode($id));
   if ($cb->get($beer_id) === null) {
-    $app->halt(404);
+    $app->render('layout.mustache',
+      array('content' => '<h1>404 - Beeer not found...how sad.'),
+      404);
+    exit;
   }
   $email = sha1($_SESSION['email']);
   if ($cb->get($email) !== null) {

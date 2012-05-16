@@ -29,6 +29,9 @@ $app->get('/breweries/:id', function($id) use ($app, $cb) {
     $content = $app->view()->render('brewery.mustache');
     $app->render('layout.mustache', compact('content'));
   } else {
-    $app->notFound();
+    $app->render('layout.mustache',
+      array('content' => '<h1>404 - Brewery not found...how sad.'),
+      404);
+    exit;
   }
 });
