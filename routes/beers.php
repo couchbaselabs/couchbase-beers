@@ -21,7 +21,7 @@ $app->get('/beers/', function() use ($app, $cb) {
 });
 
 $app->get('/beers/:id', function($id) use ($app, $cb) {
-  if (!isset($_SESSION['email'])) {
+  if (!isset($_SESSION['user'])) {
     $app->halt(401);
   } else {
     $beer_id = 'beer_' . str_replace(' ', '_', urldecode($id));
@@ -45,7 +45,7 @@ $app->get('/beers/:id', function($id) use ($app, $cb) {
 // POST route for "drinking"
 $app->post('/beers/', function () use ($app, $cb) {
   // TODO: add better login required handler thing
-  if (!isset($_SESSION['email'])) {
+  if (!isset($_SESSION['user'])) {
     $app->halt(401);
   }
   $id = $app->request()->params('id');
@@ -62,7 +62,7 @@ $app->post('/beers/', function () use ($app, $cb) {
       404);
     exit;
   }
-  $email = sha1($_SESSION['email']);
+  $email = sha1($_SESSION['user']);
   if ($cb->get($email) !== null) {
     $cb->append($email, '|' . $beer_id);
   } else {

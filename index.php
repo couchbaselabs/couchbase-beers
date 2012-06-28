@@ -11,14 +11,13 @@ const INSIDE_BEERNIQUE = true;
 // set up the app
 MustacheView::$mustacheDirectory = 'vendors';
 $app = new Slim(array('view' => 'MustacheView'));
+$app->add(new Slim_Middleware_SessionCookie());
 $env = $app->environment();
 $app->view()->appendData(array(
   'app_title' => 'Beernique',
   'base_url' => str_replace('/index.php', '', $env['SCRIPT_NAME']),
   'current_url' => $env['PATH_INFO']
 ));
-
-$app->add(new Slim_Middleware_SessionCookie());
 
 // http://www.php.net/manual/en/function.max.php#97004
 function max_key($array) {
@@ -34,12 +33,18 @@ try {
   die($e->getMessage());
 }
 
+$app->hook('slim.before', function () use ($app) {
+  $app->view()->appendData(array('user' =>
+                            (isset($_SESSION['user'])
+                            ? $_SESSION['user']
+                            : false)));
+});
 
 // GET route
 $app->get('/', function () use ($app, $cb) {
   $on_index = true;
-  if (isset($_SESSION['email']) && $_SESSION['email'] !== ''
-      && ($users_beers = $cb->get(sha1($_SESSION['email']))) !== null) {
+  if (isset($_SESSION['user']) && $_SESSION['user'] !== ''
+      && ($users_beers = $cb->get(sha1($_SESSION['user']))) !== null) {
     $users_beers = array_filter(explode('|', $users_beers));
     $users_beer_counts = array_count_values($users_beers);
     if (count($users_beers) > 0) {
@@ -100,7 +105,7 @@ $app->post('/browserid/login', function () use ($app, $cb) {
     // This logs the user in if we have an account for that email address,
     // or creates it otherwise
     //$email = sha1($r['body']['email']);
-    $email = $_SESSION['email'] = $r['body']->email;
+    $email = $_SESSION['user'] = $r['body']->email;
     if ($cb->get(sha1($email)) === null) {
       $cb->set(sha1($email), '');
     }
@@ -113,13 +118,13 @@ $app->post('/browserid/login', function () use ($app, $cb) {
 });
 
 $app->post('/browserid/logout', function() use ($app) {
-  $_SESSION['email'] = null;
+  $_SESSION['user'] = null;
 });
 
 $app->get('/browserid/whoami', function() use ($app) {
   $app->response()->header('Content-Type', 'application/json');
-  if (isset($_SESSION['email'])) {
-    echo json_encode($_SESSION['email']);
+  if (isset($_SESSION['user'])) {
+    echo json_encode($_SESSION['user']);
   }
 });
 
